@@ -6,6 +6,7 @@ namespace VideoCutterApp
 	{
 		public double StartPointTime;
 		public double EndPointTime;
+		public string filePath;
 
 		public Form1()
 		{
@@ -17,6 +18,7 @@ namespace VideoCutterApp
 			if (FileSearch.ShowDialog() != DialogResult.OK)
 				return;
 			MyPlayer.URL = FileSearch.FileName;
+			filePath=FileSearch.FileName;
 			SetStartPoint.Enabled = true;
 			SetEndPoint.Enabled = true;
 			SelectFileLabel.Visible = false;
@@ -55,5 +57,36 @@ namespace VideoCutterApp
 		{
 			return $"{((int)(totalSeconds / 3600)).ToString("D2")}:{((int)((totalSeconds % 3600) / 60)).ToString("D2")}:{((int)(totalSeconds % 60)).ToString("D2")}";
 		}
+
+		private void GoToPoint(object sender, EventArgs e)
+		{
+			if (((Label)sender).Name == "PunktStartowy")
+				MyPlayer.Ctlcontrols.currentPosition = StartPointTime;
+			else
+				MyPlayer.Ctlcontrols.currentPosition = EndPointTime;
+		}
+
+		private void ResetClicked(object sender, EventArgs e)
+		{
+			PunktStartowy.Text = "Punkt startowy";
+			PunktKoncowy.Text = "Punkt koncowy";
+			StartPointTime = default;
+			EndPointTime = default;
+		}
+
+		private void ExportFIle(object sender, EventArgs e)
+		{
+			if (filePath is null)
+				
+				return;
+			if (StartPointTime > EndPointTime)
+
+				return;
+			if (folderBrowser.ShowDialog() != DialogResult.OK)
+				return;
+			label1.Text = folderBrowser.SelectedPath;
+
+		}
+
 	}
 }

@@ -35,7 +35,8 @@
 			menuStrip1 = new MenuStrip();
 			plikToolStripMenuItem = new ToolStripMenuItem();
 			otwórzToolStripMenuItem = new ToolStripMenuItem();
-			zapiszToolStripMenuItem = new ToolStripMenuItem();
+			wyeksportujToolStripMenuItem = new ToolStripMenuItem();
+			edycjaToolStripMenuItem = new ToolStripMenuItem();
 			usunToolStripMenuItem = new ToolStripMenuItem();
 			PunktStartowy = new Label();
 			PunktKoncowy = new Label();
@@ -43,6 +44,7 @@
 			SetEndPoint = new Button();
 			SelectFileLabel = new Label();
 			SwapPointsButton = new Button();
+			folderBrowser = new FolderBrowserDialog();
 			((System.ComponentModel.ISupportInitialize)MyPlayer).BeginInit();
 			menuStrip1.SuspendLayout();
 			SuspendLayout();
@@ -50,7 +52,7 @@
 			// label1
 			// 
 			label1.AutoSize = true;
-			label1.Location = new Point(535, 572);
+			label1.Location = new Point(383, 579);
 			label1.Name = "label1";
 			label1.Size = new Size(50, 20);
 			label1.TabIndex = 1;
@@ -73,7 +75,7 @@
 			// menuStrip1
 			// 
 			menuStrip1.ImageScalingSize = new Size(20, 20);
-			menuStrip1.Items.AddRange(new ToolStripItem[] { plikToolStripMenuItem });
+			menuStrip1.Items.AddRange(new ToolStripItem[] { plikToolStripMenuItem, edycjaToolStripMenuItem });
 			menuStrip1.Location = new Point(0, 0);
 			menuStrip1.Name = "menuStrip1";
 			menuStrip1.Size = new Size(798, 28);
@@ -82,7 +84,7 @@
 			// 
 			// plikToolStripMenuItem
 			// 
-			plikToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { otwórzToolStripMenuItem, zapiszToolStripMenuItem, usunToolStripMenuItem });
+			plikToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { otwórzToolStripMenuItem, wyeksportujToolStripMenuItem });
 			plikToolStripMenuItem.Name = "plikToolStripMenuItem";
 			plikToolStripMenuItem.Size = new Size(46, 24);
 			plikToolStripMenuItem.Text = "Plik";
@@ -94,17 +96,26 @@
 			otwórzToolStripMenuItem.Text = "Otwórz plik...";
 			otwórzToolStripMenuItem.Click += OpenNewFile;
 			// 
-			// zapiszToolStripMenuItem
+			// wyeksportujToolStripMenuItem
 			// 
-			zapiszToolStripMenuItem.Name = "zapiszToolStripMenuItem";
-			zapiszToolStripMenuItem.Size = new Size(177, 26);
-			zapiszToolStripMenuItem.Text = "Wyeksportuj";
+			wyeksportujToolStripMenuItem.Name = "wyeksportujToolStripMenuItem";
+			wyeksportujToolStripMenuItem.Size = new Size(177, 26);
+			wyeksportujToolStripMenuItem.Text = "Wyeksportuj";
+			wyeksportujToolStripMenuItem.Click += ExportFIle;
+			// 
+			// edycjaToolStripMenuItem
+			// 
+			edycjaToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { usunToolStripMenuItem });
+			edycjaToolStripMenuItem.Name = "edycjaToolStripMenuItem";
+			edycjaToolStripMenuItem.Size = new Size(66, 24);
+			edycjaToolStripMenuItem.Text = "Edycja";
 			// 
 			// usunToolStripMenuItem
 			// 
 			usunToolStripMenuItem.Name = "usunToolStripMenuItem";
-			usunToolStripMenuItem.Size = new Size(177, 26);
-			usunToolStripMenuItem.Text = "Usun";
+			usunToolStripMenuItem.Size = new Size(140, 26);
+			usunToolStripMenuItem.Text = "Resetuj";
+			usunToolStripMenuItem.Click += ResetClicked;
 			// 
 			// PunktStartowy
 			// 
@@ -115,6 +126,7 @@
 			PunktStartowy.Size = new Size(142, 28);
 			PunktStartowy.TabIndex = 5;
 			PunktStartowy.Text = "Punkt startowy";
+			PunktStartowy.Click += GoToPoint;
 			// 
 			// PunktKoncowy
 			// 
@@ -125,6 +137,7 @@
 			PunktKoncowy.Size = new Size(145, 28);
 			PunktKoncowy.TabIndex = 6;
 			PunktKoncowy.Text = "Punkt koncowy";
+			PunktKoncowy.Click += GoToPoint;
 			// 
 			// SetStartPoint
 			// 
@@ -204,13 +217,15 @@
 		private MenuStrip menuStrip1;
 		private ToolStripMenuItem plikToolStripMenuItem;
 		private ToolStripMenuItem otwórzToolStripMenuItem;
-		private ToolStripMenuItem zapiszToolStripMenuItem;
-		private ToolStripMenuItem usunToolStripMenuItem;
 		private Label PunktStartowy;
 		private Label PunktKoncowy;
 		private Button SetStartPoint;
 		private Button SetEndPoint;
 		private Label SelectFileLabel;
 		private Button SwapPointsButton;
+		private ToolStripMenuItem wyeksportujToolStripMenuItem;
+		private ToolStripMenuItem edycjaToolStripMenuItem;
+		private ToolStripMenuItem usunToolStripMenuItem;
+		private FolderBrowserDialog folderBrowser;
 	}
 }

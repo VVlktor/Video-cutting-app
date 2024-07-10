@@ -4,9 +4,9 @@ namespace VideoCutterApp
 {
 	public partial class Form1 : Form
 	{
-		public double StartPointTime;
-		public double EndPointTime;
-		public string filePath;
+		private double StartPointTime;
+		private double EndPointTime;
+		private string filePath;
 
 		public Form1()
 		{
@@ -32,14 +32,14 @@ namespace VideoCutterApp
 			if (((Button)sender).Name == "SetStartPoint")
 			{
 				StartPointTime = totalSeconds;
-				PunktStartowy.Text = time;
+				StartPointLabel.Text = time;
 			}
 			else
 			{
 				EndPointTime = totalSeconds;
-				PunktKoncowy.Text = time;
+				EndPointLabel.Text = time;
 			}
-			if (StartPointTime > EndPointTime)
+			if (StartPointTime > EndPointTime && EndPointTime!=0)
 				SwapPointsButton.Enabled = true;
 		}
 
@@ -49,13 +49,13 @@ namespace VideoCutterApp
 			double p = StartPointTime;
 			StartPointTime = EndPointTime;
 			EndPointTime = p;
-			PunktStartowy.Text = TimePattern(StartPointTime);
-			PunktKoncowy.Text = TimePattern(EndPointTime);
+			StartPointLabel.Text = TimePattern(StartPointTime);
+			EndPointLabel.Text = TimePattern(EndPointTime);
 		}
 
-		public string TimePattern(double totalSeconds)
+		private string TimePattern(double totalSeconds)
 		{
-			return $"{((int)(totalSeconds / 3600)).ToString("D2")}:{((int)((totalSeconds % 3600) / 60)).ToString("D2")}:{((int)(totalSeconds % 60)).ToString("D2")}";
+			return $"{((int)(totalSeconds / 3600)).ToString("D2")}:{((int)((totalSeconds % 3600) / 60)).ToString("D2")}:{((int)(totalSeconds % 60)).ToString("D2")}.{Math.Round(totalSeconds-(int)totalSeconds,3)*1000}";
 		}
 
 		private void GoToPoint(object sender, EventArgs e)
@@ -68,25 +68,64 @@ namespace VideoCutterApp
 
 		private void ResetClicked(object sender, EventArgs e)
 		{
-			PunktStartowy.Text = "Punkt startowy";
-			PunktKoncowy.Text = "Punkt koncowy";
+			StartPointLabel.Text = "Punkt startowy";
+			EndPointLabel.Text = "Punkt koncowy";
 			StartPointTime = default;
 			EndPointTime = default;
 		}
 
 		private void ExportFIle(object sender, EventArgs e)
 		{
-			if (filePath is null)
-				
+			if (CheckConditions())
 				return;
-			if (StartPointTime > EndPointTime)
 
-				return;
 			if (folderBrowser.ShowDialog() != DialogResult.OK)
 				return;
-			label1.Text = folderBrowser.SelectedPath;
 
+			string pathToSave=folderBrowser.SelectedPath+@"\"+ProjectNameInput.Text+".mp4";
+			string InfoArguments = @$"-i ""{filePath}"" -ss {TimePattern(StartPointTime)} -to {TimePattern(EndPointTime)}{(MuteAudioBox.Checked ? " -an" : "")} -f mp4 ""{pathToSave}""";
+			try
+			{
+				PleaseWaitLabel.Visible = true;
+				using (Process process = new Process())
+				{
+					process.StartInfo.UseShellExecute = false;
+					process.StartInfo.RedirectStandardOutput = true;
+					process.StartInfo.CreateNoWindow = true;
+					process.StartInfo.FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg", "ffmpeg.exe");
+					process.StartInfo.Arguments = InfoArguments;
+					process.Start();
+					process.WaitForExit();
+				}
+				PleaseWaitLabel.Visible= false;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"An error occurred: {ex.Message}");
+			}
 		}
 
+		private bool CheckConditions()
+		{
+			if (filePath is null)
+			{
+				MessageBox.Show("Nie rozpoczêto edycji pliku!", "B³¹d", MessageBoxButtons.OK);
+				return true;
+			}
+			if (StartPointTime > EndPointTime)
+			{
+				MessageBox.Show("Wide³ki czasowe nie s¹ zgodne!", "B³¹d", MessageBoxButtons.OK);
+				return true;
+			}
+			if (ProjectNameInput.Text == "")
+			{
+				MessageBox.Show("Nie nadano nazwy projektowi!", "B³¹d", MessageBoxButtons.OK);
+				return true;
+			}
+			if (EndPointTime == 0)
+				EndPointTime = MyPlayer.currentMedia.duration;
+
+			return false;
+		}
 	}
 }

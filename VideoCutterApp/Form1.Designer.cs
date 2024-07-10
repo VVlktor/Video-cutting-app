@@ -29,7 +29,6 @@
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-			label1 = new Label();
 			MyPlayer = new AxWMPLib.AxWindowsMediaPlayer();
 			FileSearch = new OpenFileDialog();
 			menuStrip1 = new MenuStrip();
@@ -38,25 +37,20 @@
 			wyeksportujToolStripMenuItem = new ToolStripMenuItem();
 			edycjaToolStripMenuItem = new ToolStripMenuItem();
 			usunToolStripMenuItem = new ToolStripMenuItem();
-			PunktStartowy = new Label();
-			PunktKoncowy = new Label();
+			StartPointLabel = new Label();
+			EndPointLabel = new Label();
 			SetStartPoint = new Button();
 			SetEndPoint = new Button();
 			SelectFileLabel = new Label();
 			SwapPointsButton = new Button();
 			folderBrowser = new FolderBrowserDialog();
+			ProjectNameInput = new TextBox();
+			label2 = new Label();
+			PleaseWaitLabel = new Label();
+			MuteAudioBox = new CheckBox();
 			((System.ComponentModel.ISupportInitialize)MyPlayer).BeginInit();
 			menuStrip1.SuspendLayout();
 			SuspendLayout();
-			// 
-			// label1
-			// 
-			label1.AutoSize = true;
-			label1.Location = new Point(383, 579);
-			label1.Name = "label1";
-			label1.Size = new Size(50, 20);
-			label1.TabIndex = 1;
-			label1.Text = "label1";
 			// 
 			// MyPlayer
 			// 
@@ -117,27 +111,27 @@
 			usunToolStripMenuItem.Text = "Resetuj";
 			usunToolStripMenuItem.Click += ResetClicked;
 			// 
-			// PunktStartowy
+			// StartPointLabel
 			// 
-			PunktStartowy.AutoSize = true;
-			PunktStartowy.Font = new Font("Segoe UI", 12F);
-			PunktStartowy.Location = new Point(22, 592);
-			PunktStartowy.Name = "PunktStartowy";
-			PunktStartowy.Size = new Size(142, 28);
-			PunktStartowy.TabIndex = 5;
-			PunktStartowy.Text = "Punkt startowy";
-			PunktStartowy.Click += GoToPoint;
+			StartPointLabel.AutoSize = true;
+			StartPointLabel.Font = new Font("Segoe UI", 12F);
+			StartPointLabel.Location = new Point(22, 592);
+			StartPointLabel.Name = "StartPointLabel";
+			StartPointLabel.Size = new Size(142, 28);
+			StartPointLabel.TabIndex = 5;
+			StartPointLabel.Text = "Punkt startowy";
+			StartPointLabel.Click += GoToPoint;
 			// 
-			// PunktKoncowy
+			// EndPointLabel
 			// 
-			PunktKoncowy.AutoSize = true;
-			PunktKoncowy.Font = new Font("Segoe UI", 12F);
-			PunktKoncowy.Location = new Point(210, 592);
-			PunktKoncowy.Name = "PunktKoncowy";
-			PunktKoncowy.Size = new Size(145, 28);
-			PunktKoncowy.TabIndex = 6;
-			PunktKoncowy.Text = "Punkt koncowy";
-			PunktKoncowy.Click += GoToPoint;
+			EndPointLabel.AutoSize = true;
+			EndPointLabel.Font = new Font("Segoe UI", 12F);
+			EndPointLabel.Location = new Point(210, 592);
+			EndPointLabel.Name = "EndPointLabel";
+			EndPointLabel.Size = new Size(145, 28);
+			EndPointLabel.TabIndex = 6;
+			EndPointLabel.Text = "Punkt koncowy";
+			EndPointLabel.Click += GoToPoint;
 			// 
 			// SetStartPoint
 			// 
@@ -172,6 +166,7 @@
 			SelectFileLabel.Size = new Size(398, 89);
 			SelectFileLabel.TabIndex = 9;
 			SelectFileLabel.Text = "Wybierz plik";
+			SelectFileLabel.Click += OpenNewFile;
 			// 
 			// SwapPointsButton
 			// 
@@ -185,24 +180,66 @@
 			SwapPointsButton.UseVisualStyleBackColor = true;
 			SwapPointsButton.Click += SwapPoints;
 			// 
+			// ProjectNameInput
+			// 
+			ProjectNameInput.Location = new Point(398, 562);
+			ProjectNameInput.Name = "ProjectNameInput";
+			ProjectNameInput.Size = new Size(388, 27);
+			ProjectNameInput.TabIndex = 11;
+			// 
+			// label2
+			// 
+			label2.AutoSize = true;
+			label2.Location = new Point(398, 539);
+			label2.Name = "label2";
+			label2.Size = new Size(113, 20);
+			label2.TabIndex = 12;
+			label2.Text = "Nazwa projektu";
+			// 
+			// PleaseWaitLabel
+			// 
+			PleaseWaitLabel.AutoSize = true;
+			PleaseWaitLabel.BackColor = Color.Transparent;
+			PleaseWaitLabel.Font = new Font("Segoe UI", 40F);
+			PleaseWaitLabel.Location = new Point(166, 212);
+			PleaseWaitLabel.Name = "PleaseWaitLabel";
+			PleaseWaitLabel.Size = new Size(488, 89);
+			PleaseWaitLabel.TabIndex = 13;
+			PleaseWaitLabel.Text = "Prosze czekac...";
+			PleaseWaitLabel.Visible = false;
+			// 
+			// MuteAudioBox
+			// 
+			MuteAudioBox.AutoSize = true;
+			MuteAudioBox.Font = new Font("Segoe UI", 12F);
+			MuteAudioBox.Location = new Point(398, 611);
+			MuteAudioBox.Name = "MuteAudioBox";
+			MuteAudioBox.Size = new Size(149, 32);
+			MuteAudioBox.TabIndex = 14;
+			MuteAudioBox.Text = "Wycisz audio";
+			MuteAudioBox.UseVisualStyleBackColor = true;
+			// 
 			// Form1
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
 			ClientSize = new Size(798, 698);
+			Controls.Add(MuteAudioBox);
+			Controls.Add(PleaseWaitLabel);
+			Controls.Add(label2);
+			Controls.Add(ProjectNameInput);
 			Controls.Add(SwapPointsButton);
 			Controls.Add(SelectFileLabel);
 			Controls.Add(SetEndPoint);
 			Controls.Add(SetStartPoint);
-			Controls.Add(PunktKoncowy);
-			Controls.Add(PunktStartowy);
+			Controls.Add(EndPointLabel);
+			Controls.Add(StartPointLabel);
 			Controls.Add(MyPlayer);
-			Controls.Add(label1);
 			Controls.Add(menuStrip1);
 			FormBorderStyle = FormBorderStyle.FixedSingle;
 			MainMenuStrip = menuStrip1;
 			Name = "Form1";
-			Text = "Form1";
+			Text = "Edytor video";
 			((System.ComponentModel.ISupportInitialize)MyPlayer).EndInit();
 			menuStrip1.ResumeLayout(false);
 			menuStrip1.PerformLayout();
@@ -211,14 +248,13 @@
 		}
 
 		#endregion
-		private Label label1;
 		private AxWMPLib.AxWindowsMediaPlayer MyPlayer;
 		private OpenFileDialog FileSearch;
 		private MenuStrip menuStrip1;
 		private ToolStripMenuItem plikToolStripMenuItem;
 		private ToolStripMenuItem otwórzToolStripMenuItem;
-		private Label PunktStartowy;
-		private Label PunktKoncowy;
+		private Label StartPointLabel;
+		private Label EndPointLabel;
 		private Button SetStartPoint;
 		private Button SetEndPoint;
 		private Label SelectFileLabel;
@@ -227,5 +263,9 @@
 		private ToolStripMenuItem edycjaToolStripMenuItem;
 		private ToolStripMenuItem usunToolStripMenuItem;
 		private FolderBrowserDialog folderBrowser;
+		private TextBox ProjectNameInput;
+		private Label label2;
+		private Label PleaseWaitLabel;
+		private CheckBox MuteAudioBox;
 	}
 }

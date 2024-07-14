@@ -11,6 +11,7 @@ namespace VideoCutterApp
 		public Form1()
 		{
 			InitializeComponent();
+			FileFormatSelector.SelectedIndex = 1;
 		}
 
 		private void OpenNewFile(object sender, EventArgs e)
@@ -72,6 +73,9 @@ namespace VideoCutterApp
 			EndPointLabel.Text = "Punkt koncowy";
 			StartPointTime = default;
 			EndPointTime = default;
+			ProjectNameInput.Text = "";
+			MuteAudioBox.Checked = false;
+			FileFormatSelector.SelectedIndex = 1;
 		}
 
 		private void ExportFIle(object sender, EventArgs e)
@@ -82,8 +86,8 @@ namespace VideoCutterApp
 			if (folderBrowser.ShowDialog() != DialogResult.OK)
 				return;
 
-			string pathToSave=folderBrowser.SelectedPath+@"\"+ProjectNameInput.Text+".mp4";
-			string InfoArguments = @$"-i ""{filePath}"" -ss {TimePattern(StartPointTime)} -to {TimePattern(EndPointTime)}{(MuteAudioBox.Checked ? " -an" : "")} -f mp4 ""{pathToSave}""";
+			string pathToSave=folderBrowser.SelectedPath+@"\"+ProjectNameInput.Text+$".{FileFormatSelector.Text}";
+			string InfoArguments = @$"-i ""{filePath}"" -ss {TimePattern(StartPointTime)} -to {TimePattern(EndPointTime)}{(MuteAudioBox.Checked ? " -an" : "")} -f {FileFormatSelector.Text} ""{pathToSave}""";
 			try
 			{
 				PleaseWaitLabel.Visible = true;
@@ -120,6 +124,10 @@ namespace VideoCutterApp
 			if (ProjectNameInput.Text == "")
 			{
 				MessageBox.Show("Nie nadano nazwy projektowi!", "B³¹d", MessageBoxButtons.OK);
+				return true;
+			}
+			if(!FileFormatSelector.Items.Contains(FileFormatSelector.Text)){
+				MessageBox.Show("Nieznany format pliku!", "B³¹d", MessageBoxButtons.OK);
 				return true;
 			}
 			if (EndPointTime == 0)

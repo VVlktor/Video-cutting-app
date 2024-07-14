@@ -48,6 +48,8 @@
 			label2 = new Label();
 			PleaseWaitLabel = new Label();
 			MuteAudioBox = new CheckBox();
+			FileFormatSelector = new ComboBox();
+			label1 = new Label();
 			((System.ComponentModel.ISupportInitialize)MyPlayer).BeginInit();
 			menuStrip1.SuspendLayout();
 			SuspendLayout();
@@ -212,18 +214,40 @@
 			// 
 			MuteAudioBox.AutoSize = true;
 			MuteAudioBox.Font = new Font("Segoe UI", 12F);
-			MuteAudioBox.Location = new Point(398, 611);
+			MuteAudioBox.Location = new Point(398, 617);
 			MuteAudioBox.Name = "MuteAudioBox";
 			MuteAudioBox.Size = new Size(149, 32);
 			MuteAudioBox.TabIndex = 14;
 			MuteAudioBox.Text = "Wycisz audio";
 			MuteAudioBox.UseVisualStyleBackColor = true;
 			// 
+			// FileFormatSelector
+			// 
+			FileFormatSelector.FormattingEnabled = true;
+			FileFormatSelector.Items.AddRange(new object[] { "avi", "mp4", "mpeg", "webm" });
+			FileFormatSelector.Location = new Point(649, 618);
+			FileFormatSelector.Name = "FileFormatSelector";
+			FileFormatSelector.Size = new Size(137, 28);
+			FileFormatSelector.Sorted = true;
+			FileFormatSelector.TabIndex = 15;
+			// 
+			// label1
+			// 
+			label1.AutoSize = true;
+			label1.Font = new Font("Segoe UI", 12F);
+			label1.Location = new Point(568, 617);
+			label1.Name = "label1";
+			label1.Size = new Size(75, 28);
+			label1.TabIndex = 16;
+			label1.Text = "Format";
+			// 
 			// Form1
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
 			ClientSize = new Size(798, 698);
+			Controls.Add(label1);
+			Controls.Add(FileFormatSelector);
 			Controls.Add(MuteAudioBox);
 			Controls.Add(PleaseWaitLabel);
 			Controls.Add(label2);
@@ -267,5 +291,7 @@
 		private Label label2;
 		private Label PleaseWaitLabel;
 		private CheckBox MuteAudioBox;
+		private ComboBox FileFormatSelector;
+		private Label label1;
 	}
 }

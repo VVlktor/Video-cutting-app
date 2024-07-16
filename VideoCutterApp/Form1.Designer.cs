@@ -60,7 +60,7 @@
 			MyPlayer.Location = new Point(0, 31);
 			MyPlayer.Name = "MyPlayer";
 			MyPlayer.OcxState = (AxHost.State)resources.GetObject("MyPlayer.OcxState");
-			MyPlayer.Size = new Size(800, 492);
+			MyPlayer.Size = new Size(800, 483);
 			MyPlayer.TabIndex = 2;
 			// 
 			// FileSearch

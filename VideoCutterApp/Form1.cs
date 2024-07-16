@@ -1,17 +1,36 @@
 using System.Diagnostics;
+using VideoCutterApp.Custom_Controls;
 
 namespace VideoCutterApp
 {
 	public partial class Form1 : Form
 	{
-		private double StartPointTime;
-		private double EndPointTime;
 		private string filePath;
+		private PointOnTimeline StartPointStamp;
+		private PointOnTimeline EndPointStamp;
 
 		public Form1()
 		{
 			InitializeComponent();
+			SetTimeStamps();
+		}
+
+		private void SetTimeStamps()
+		{
 			FileFormatSelector.SelectedIndex = 1;
+			StartPointStamp = new() { Location = new(30, 470) };
+			EndPointStamp = new() { Location = new(30, 470) };
+			StartPointStamp.Click += TimeStampClicked;
+			EndPointStamp.Click += TimeStampClicked;
+			Controls.Add(StartPointStamp);
+			StartPointStamp.BringToFront();
+			Controls.Add(EndPointStamp);
+			EndPointStamp.BringToFront();
+		}
+
+		public void TimeStampClicked(object sender, EventArgs e)
+		{
+			MyPlayer.Ctlcontrols.currentPosition=((PointOnTimeline)sender).TimeStamp;
 		}
 
 		private void OpenNewFile(object sender, EventArgs e)
@@ -30,28 +49,40 @@ namespace VideoCutterApp
 			double totalSeconds = MyPlayer.Ctlcontrols.currentPosition;
 			string time = TimePattern(totalSeconds);
 			SwapPointsButton.Enabled = false;
+			double proc = (totalSeconds * 100) / MyPlayer.currentMedia.duration;
+			int locatX = (int)((((int)Math.Floor((Size.Width - 60) * proc / 100)) + 30) * 0.96);
 			if (((Button)sender).Name == "SetStartPoint")
 			{
-				StartPointTime = totalSeconds;
 				StartPointLabel.Text = time;
+				StartPointStamp.TimeStamp = totalSeconds;
+				StartPointStamp.Location = new(locatX, 470);
 			}
 			else
 			{
-				EndPointTime = totalSeconds;
 				EndPointLabel.Text = time;
+				EndPointStamp.TimeStamp=totalSeconds;
+				EndPointStamp.Location = new(locatX, 470);
 			}
-			if (StartPointTime > EndPointTime && EndPointTime!=0)
+			if (StartPointStamp.TimeStamp > EndPointStamp.TimeStamp && EndPointStamp.TimeStamp!=0)
 				SwapPointsButton.Enabled = true;
 		}
 
 		private void SwapPoints(object sender, EventArgs e)
 		{
+			int loc = EndPointStamp.Location.X;
+			EndPointStamp.Location = new(StartPointStamp.Location.X, 470);
+			StartPointStamp.Location = new(loc, 470);
+			SwapTwoVariables<double>(ref StartPointStamp.TimeStamp, ref EndPointStamp.TimeStamp);
 			SwapPointsButton.Enabled = false;
-			double p = StartPointTime;
-			StartPointTime = EndPointTime;
-			EndPointTime = p;
-			StartPointLabel.Text = TimePattern(StartPointTime);
-			EndPointLabel.Text = TimePattern(EndPointTime);
+			StartPointLabel.Text = TimePattern(StartPointStamp.TimeStamp);
+			EndPointLabel.Text = TimePattern(EndPointStamp.TimeStamp);
+		}
+
+		private void SwapTwoVariables<T>(ref T first, ref T second)
+		{
+			T o = first;
+			first = second; 
+			second = o;
 		}
 
 		private string TimePattern(double totalSeconds)
@@ -62,17 +93,17 @@ namespace VideoCutterApp
 		private void GoToPoint(object sender, EventArgs e)
 		{
 			if (((Label)sender).Name == "PunktStartowy")
-				MyPlayer.Ctlcontrols.currentPosition = StartPointTime;
+				MyPlayer.Ctlcontrols.currentPosition = StartPointStamp.TimeStamp;
 			else
-				MyPlayer.Ctlcontrols.currentPosition = EndPointTime;
+				MyPlayer.Ctlcontrols.currentPosition = EndPointStamp.TimeStamp;
 		}
 
 		private void ResetClicked(object sender, EventArgs e)
 		{
 			StartPointLabel.Text = "Punkt startowy";
 			EndPointLabel.Text = "Punkt koncowy";
-			StartPointTime = default;
-			EndPointTime = default;
+			StartPointStamp.TimeStamp = 0;
+			EndPointStamp.TimeStamp = 0;
 			ProjectNameInput.Text = "";
 			MuteAudioBox.Checked = false;
 			FileFormatSelector.SelectedIndex = 1;
@@ -87,7 +118,7 @@ namespace VideoCutterApp
 				return;
 
 			string pathToSave=folderBrowser.SelectedPath+@"\"+ProjectNameInput.Text+$".{FileFormatSelector.Text}";
-			string InfoArguments = @$"-i ""{filePath}"" -ss {TimePattern(StartPointTime)} -to {TimePattern(EndPointTime)}{(MuteAudioBox.Checked ? " -an" : "")} -f {FileFormatSelector.Text} ""{pathToSave}""";
+			string InfoArguments = @$"-i ""{filePath}"" -ss {TimePattern(StartPointStamp.TimeStamp)} -to {TimePattern(EndPointStamp.TimeStamp)}{(MuteAudioBox.Checked ? " -an" : "")} -f {FileFormatSelector.Text} ""{pathToSave}""";
 			try
 			{
 				PleaseWaitLabel.Visible = true;
@@ -116,7 +147,7 @@ namespace VideoCutterApp
 				MessageBox.Show("Nie rozpoczêto edycji pliku!", "B³¹d", MessageBoxButtons.OK);
 				return true;
 			}
-			if (StartPointTime > EndPointTime)
+			if (StartPointStamp.TimeStamp > EndPointStamp.TimeStamp)
 			{
 				MessageBox.Show("Wide³ki czasowe nie s¹ zgodne!", "B³¹d", MessageBoxButtons.OK);
 				return true;
@@ -130,8 +161,8 @@ namespace VideoCutterApp
 				MessageBox.Show("Nieznany format pliku!", "B³¹d", MessageBoxButtons.OK);
 				return true;
 			}
-			if (EndPointTime == 0)
-				EndPointTime = MyPlayer.currentMedia.duration;
+			if (EndPointStamp.TimeStamp == 0)
+				EndPointStamp.TimeStamp = MyPlayer.currentMedia.duration;
 
 			return false;
 		}
